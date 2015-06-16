@@ -448,12 +448,25 @@ var resizePizzas = function(size) {
     return dx;
   }
 
+  //creating the variable ThePizzaContainer outside the for loop and usung getElementsByClassName instead of querySelectorAll
+  var ThePizzaContainer = document.querySelectorAll(".randomPizzaContainer")
+
+  var dx = determineDx(ThePizzaContainer[0], size);
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    //for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
+    for (var i = 0; i < ThePizzaContainer.length; i++) {
+
+      //moved the dx variable creation outside the loop
+      //var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
+
+      //no need to create a variable here -incorporating it into the line below
+      //var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
+
+      //using the ThePizzaContainer object and changing the width without using the newwidth variable
+      //document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+      ThePizzaContainer[i].style.width = (ThePizzaContainer[i].offsetWidth + dx) + 'px';;
+
     }
   }
 
@@ -468,8 +481,9 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
-var pizzasDiv = document.getElementById("randomPizzas");
 // This for-loop actually creates and appends all of the pizzas when the page loads
+//moved pizzasDiv outside the for loop.
+var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
@@ -504,11 +518,16 @@ function updatePositions() {
 
   //var items = document.querySelectorAll('.mover');
   var items = document.getElementsByClassName('mover');
-  var thepos = document.body.scrollTop / 1250;
+  // creating the variable phase outside of the loop
+  var phase;
+
+  //performing this outside the loop to improve performance. (dropped time generate last 10 frames by an average of 60 ms)
+  var thePos = document.body.scrollTop / 1250;
+
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin(thepos + (i % 5));
-    //items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-    items[i].style.transform = 'translateX(' + (100 * phase * 5) + 'px)';
+    //phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+    phase = Math.sin(thePos + (i % 5));
+    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -528,7 +547,7 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 60; i++) {
+  for (var i = 0; i < 200; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
