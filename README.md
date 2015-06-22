@@ -1,11 +1,50 @@
-##updates made to views/js/main.js
---created variable 'ThePizzaContainer' outside the for loop and usung getElementsByClassName instead of querySelectorAll
+##How to run the Web Opimization sample page:
+
+#1
+	Go to to https://github.com/mahoneyz/P4_WebOptimization and click on the
+
+#2
+	Click on 'Download Zip' button
+
+#3
+	Save it to a directory and then unzip the P4_WebOptimization-master to a folder on your computer
+
+#4
+	Change to the folder and open Index.html in Google Chrome.
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+##Optimizations I made to the views/js/main.js file:
+--created variable 'ThePizzaContainer' outside the for loop and using getElementsByClassName instead of querySelectorAll
+
 --moved the dx variable creation outside the loop
---incorporated the newwidth variable into the line chaning the style.width
---moved pizzasDiv outside the for loop.
+
+--incorporated the newwidth variable into the line changing the style.width
+
+--moved pizzasDiv outside the for loop. [line 514]
+
 --changed uses of querySelectorAll to getElementsByClassName where appropriate
+
 --created the variable phase outside of the loop
+
 --created variable 'thePos' outside loop to improve performance. (dropped time generate last 10 frames by an average of 60 ms)
+
+--created variable specifically for the length of thePizzaContainer so it is not evaluated in every iteration of the for loop
+
+--moved elem declaration outside the for loop
+
+--using getElementById instead of querySelector for better performance
+
+
+
+#Jim Mahoney June 2015
+########################################################################################################################################
+
+
+
+
+
 
 
 ########################################################################################################################################
