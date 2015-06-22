@@ -12,7 +12,7 @@
 #4
 	Change to the folder and open Index.html in Google Chrome.
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # #
 
 
 ##Optimizations I made to the views/js/main.js file:
@@ -22,7 +22,7 @@
 
 --incorporated the newwidth variable into the line changing the style.width
 
---moved pizzasDiv outside the for loop. [line 514]
+--moved pizzasDiv outside the for loop.
 
 --changed uses of querySelectorAll to getElementsByClassName where appropriate
 
