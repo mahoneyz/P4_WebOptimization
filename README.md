@@ -1,6 +1,11 @@
 ##How to run the Web Opimization sample page:
 
+# Go to: http://mahoneyz.github.io/P4_WebOptimization/
+
+ OR to download and run locally:
+
 #1
+
 	Go to to https://github.com/mahoneyz/P4_WebOptimization and click on the
 
 #2
