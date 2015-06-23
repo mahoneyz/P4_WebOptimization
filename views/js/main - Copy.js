@@ -404,19 +404,15 @@ var resizePizzas = function(size) {
 
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
-    //Creating an element variable for document.getElementById("pizzaSize")
-    var pizzaSizeElement = document.getElementById("pizzaSize");
     switch(size) {
       case "1":
-        //document.querySelector("#pizzaSize").innerHTML = "Small";
-        //using getElementById instead of querySelector since we knowwhat we are looking for
-        pizzaSizeElement.innerHTML = "Small";
+        document.querySelector("#pizzaSize").innerHTML = "Small";
         return;
       case "2":
-        pizzaSizeElement.innerHTML = "Medium";
+        document.querySelector("#pizzaSize").innerHTML = "Medium";
         return;
       case "3":
-        pizzaSizeElement.innerHTML = "Large";
+        document.querySelector("#pizzaSize").innerHTML = "Large";
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -425,15 +421,13 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
-  var windowwidth;
-
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldwidth = elem.offsetWidth;
-    //using getElementById instead of querySelector since we knowwhat we are looking for
-    windowwidth = document.getElementById("randomPizzas").offsetWidth;
+    var windowwidth = document.querySelector("#randomPizzas").offsetWidth;
     var oldsize = oldwidth / windowwidth;
 
+    // TODO: change to 3 sizes? no more xl?
     // Changes the slider value to a percent width
     function sizeSwitcher (size) {
       switch(size) {
@@ -454,19 +448,28 @@ var resizePizzas = function(size) {
     return dx;
   }
 
+  //creating the variable thePizzaContainer outside the for loop and usung getElementsByClassName instead of querySelectorAll
+  //var thePizzaContainer = document.querySelectorAll(".randomPizzaContainer")
+  var thePizzaContainer = document.getElementsByClassName("randomPizzaContainer");
+  //created variable specifically for the length of thePizzaContainer so it is not evaluated in every iteration of the for loop
+  var thePizzaContainerLength = thePizzaContainer.length;
 
-// Iterates through pizza elements on the page and changes their widths
- function changePizzaSizes(size) {
-     //using getElementsByClassName instead of querySelectorAll because it is more efficent since we know we are looking for an element with a specific class
-     var thePizzaContainer = document.getElementsByClassName("randomPizzaContainer");
-     //moving the dx line oustide the loop since it will be the same every time.  Also using the variable created above instead of calling querySelectorAll
-     var dx = determineDx(thePizzaContainer, size);
-     //since newwidth is the same everytime, moving this line outside the for loop to improve performance
-     var newwidth = (thePizzaContainer[0].offsetWidth + dx) + 'px';
-     //created variable specifically for the length of thePizzaContainer so it is not evaluated in every iteration of the for loop
-     var thePizzaContainerLength = thePizzaContainer.length;
-     for (var i = 0; i < thePizzaContainerLength; i++) {
-        thePizzaContainer[i].style.width = newwidth;
+  var dx = determineDx(thePizzaContainer[0], size);
+  // Iterates through pizza elements on the page and changes their widths
+  function changePizzaSizes(size) {
+    //for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
+    for (var i = 0; i < thePizzaContainerLength; i++) {
+
+      //moved the dx variable creation outside the loop
+      //var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
+
+      //no need to create a variable here -incorporating it into the line below
+      //var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
+
+      //using the thePizzaContainer object and changing the width without using the newwidth variable
+      //document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+      thePizzaContainer[i].style.width = (thePizzaContainer[i].offsetWidth + dx) + 'px';;
+
     }
   }
 
@@ -481,7 +484,8 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
-//moved pizzasDiv outside the for loop since it never changes.
+// This for-loop actually creates and appends all of the pizzas when the page loads
+//moved pizzasDiv outside the for loop.
 var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
@@ -517,13 +521,13 @@ function updatePositions() {
 
   //var items = document.querySelectorAll('.mover');
   var items = document.getElementsByClassName('mover');
-  //creating a specific variable for the length of items so we don't have to evaluate it every iteration of the for loop below
-  var itemsLength = items.length;
   // creating the variable phase outside of the loop
   var phase;
+
   //performing this outside the loop to improve performance. (dropped time generate last 10 frames by an average of 60 ms)
   var thePos = document.body.scrollTop / 1250;
-  for (var i = 0; i < itemsLength; i++) {
+
+  for (var i = 0; i < items.length; i++) {
     //phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
     phase = Math.sin(thePos + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
@@ -546,12 +550,13 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  //moved elem delaration outside the for loop
-  var elem;
+  //moved elem delaclaration outside the for loop
+  var elem = document.createElement('img');
+
   //for (var i = 0; i < 200; i++) {
-  //reducing number of pizzas from 200 to 48 -no need to create so many
+  //reducing number of pizzas -no need to create so many
   for (var i = 0; i < 48; i++) {
-    elem = document.createElement('img');
+
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";

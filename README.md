@@ -41,6 +41,9 @@
 
 --using getElementById instead of querySelector for better performance
 
+--created a specific variable for the length of items so we don't have to evaluate it every iteration of the for loop below
+
+--created new smaller version of the optimized pizzeria.jpg pic that will be used by index.html (pizza.html will use the regular sized one)
 
 
 #Jim Mahoney June 2015

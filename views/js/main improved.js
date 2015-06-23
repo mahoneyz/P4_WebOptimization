@@ -404,19 +404,15 @@ var resizePizzas = function(size) {
 
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
-    //Creating an element variable for document.getElementById("pizzaSize")
-    var pizzaSizeElement = document.getElementById("pizzaSize");
     switch(size) {
       case "1":
-        //document.querySelector("#pizzaSize").innerHTML = "Small";
-        //using getElementById instead of querySelector since we knowwhat we are looking for
-        pizzaSizeElement.innerHTML = "Small";
+        document.querySelector("#pizzaSize").innerHTML = "Small";
         return;
       case "2":
-        pizzaSizeElement.innerHTML = "Medium";
+        document.querySelector("#pizzaSize").innerHTML = "Medium";
         return;
       case "3":
-        pizzaSizeElement.innerHTML = "Large";
+        document.querySelector("#pizzaSize").innerHTML = "Large";
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -425,15 +421,13 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
-  var windowwidth;
-
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldwidth = elem.offsetWidth;
-    //using getElementById instead of querySelector since we knowwhat we are looking for
-    windowwidth = document.getElementById("randomPizzas").offsetWidth;
+    var windowwidth = document.querySelector("#randomPizzas").offsetWidth;
     var oldsize = oldwidth / windowwidth;
 
+    // TODO: change to 3 sizes? no more xl?
     // Changes the slider value to a percent width
     function sizeSwitcher (size) {
       switch(size) {
@@ -454,19 +448,19 @@ var resizePizzas = function(size) {
     return dx;
   }
 
+  randomPizzaContainer = document.querySelectorAll(".randomPizzaContainer")
 
-// Iterates through pizza elements on the page and changes their widths
- function changePizzaSizes(size) {
-     //using getElementsByClassName instead of querySelectorAll because it is more efficent since we know we are looking for an element with a specific class
-     var thePizzaContainer = document.getElementsByClassName("randomPizzaContainer");
-     //moving the dx line oustide the loop since it will be the same every time.  Also using the variable created above instead of calling querySelectorAll
-     var dx = determineDx(thePizzaContainer, size);
-     //since newwidth is the same everytime, moving this line outside the for loop to improve performance
-     var newwidth = (thePizzaContainer[0].offsetWidth + dx) + 'px';
-     //created variable specifically for the length of thePizzaContainer so it is not evaluated in every iteration of the for loop
-     var thePizzaContainerLength = thePizzaContainer.length;
-     for (var i = 0; i < thePizzaContainerLength; i++) {
-        thePizzaContainer[i].style.width = newwidth;
+  // Iterates through pizza elements on the page and changes their widths
+  function changePizzaSizes(size) {
+    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
+      //var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
+      var dx = determineDx(randomPizzaContainer[i], size);
+
+      //var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
+      //
+      var newwidth = (randomPizzaContainer[i].offsetWidth + dx) + 'px';
+
+      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
     }
   }
 
@@ -481,11 +475,15 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
-//moved pizzasDiv outside the for loop since it never changes.
+//move outside thelooop
 var pizzasDiv = document.getElementById("randomPizzas");
+
+// This for-loop actually creates and appends all of the pizzas when the page loads
 for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
+
+//randompizzconatiner
 
 // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
 window.performance.mark("mark_end_generating");
@@ -516,17 +514,16 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
   //var items = document.querySelectorAll('.mover');
+  //using getElementsByClassName instead of querySelectorAll
   var items = document.getElementsByClassName('mover');
-  //creating a specific variable for the length of items so we don't have to evaluate it every iteration of the for loop below
-  var itemsLength = items.length;
-  // creating the variable phase outside of the loop
-  var phase;
-  //performing this outside the loop to improve performance. (dropped time generate last 10 frames by an average of 60 ms)
-  var thePos = document.body.scrollTop / 1250;
-  for (var i = 0; i < itemsLength; i++) {
-    //phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    phase = Math.sin(thePos + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  //moving this to outside the loop. -No need to create this variable every iteration
+
+  var thepos = document.body.scrollTop / 1250;
+  for (var i = 0; i < items.length; i++) {
+    var phase = Math.sin(thepos + (i % 5));
+    //items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    //using transform translateX instead of style.left
+    items[i].style.transform = 'translateX(' + (100 * phase * 5) + 'px)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -546,21 +543,18 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  //moved elem delaration outside the for loop
-  var elem;
+
   //for (var i = 0; i < 200; i++) {
-  //reducing number of pizzas from 200 to 48 -no need to create so many
-  for (var i = 0; i < 48; i++) {
-    elem = document.createElement('img');
+  //Reducing the number of pizzas from 200 to 60 since they are not all seen at the same time
+  for (var i = 0; i < 60; i++) {
+    var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    //document.querySelector("#movingPizzas1").appendChild(elem);
-    //using getElementById instead of querySelector for better performance
-    document.getElementById("movingPizzas1").appendChild(elem);
+    document.querySelector("#movingPizzas1").appendChild(elem);
   }
   updatePositions();
 });
