@@ -460,7 +460,7 @@ var resizePizzas = function(size) {
      //using getElementsByClassName instead of querySelectorAll because it is more efficent since we know we are looking for an element with a specific class
      var thePizzaContainer = document.getElementsByClassName("randomPizzaContainer");
      //moving the dx line oustide the loop since it will be the same every time.  Also using the variable created above instead of calling querySelectorAll
-     var dx = determineDx(thePizzaContainer, size);
+     var dx = determineDx(thePizzaContainer[0], size);
      //since newwidth is the same everytime, moving this line outside the for loop to improve performance
      var newwidth = (thePizzaContainer[0].offsetWidth + dx) + 'px';
      //created variable specifically for the length of thePizzaContainer so it is not evaluated in every iteration of the for loop
